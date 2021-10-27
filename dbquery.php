@@ -73,12 +73,13 @@
 		$qstr = $qstr . 'orderdetails.priceEach ';
 	}
 
+	// Add if statements to remove joins when not needed
 	$qstr = $qstr . ' FROM orders 
 		INNER JOIN orderdetails ON orders.orderNumber = orderdetails.orderNumber 
 		INNER JOIN orderdetails.productCode = products.productCode';
 
 	if($_POST['orderNumber'] != ''){
-		$qstr = $qstr . 'WHERE orders.orderNumber = ' . $_POST['orderNumber'];
+		$qstr = $qstr . ' WHERE orders.orderNumber = ' . $_POST['orderNumber'];
 	}else if($_POST['dateFrom'] != '' && $_POST['dateTo'] != ''){
 		$qstr = $qstr . ' WHERE NOT (orders.orderDate > ' . $_POST['dateTo'] . ' OR orders.orderDate < ' . $_POST['dateFrom'] . ')';
 	}
