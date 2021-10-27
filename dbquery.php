@@ -12,6 +12,10 @@
 
 	var_dump($_POST);
 
+	// $testStr = 'test1, test2, ';
+	// $testStr = rtrim($testStr, ', 	');
+	// echo '</br>' . $testStr;
+
 ?>
 
 <h1>Query</h1>
@@ -50,6 +54,7 @@
 
 <?php
 	
+	//Select the required columns when checked
 	$qstr = 'SELECT ';
 	if($_POST['number'] == TRUE){
 		$qstr = $qstr . 'orders.orderNumber, ';
@@ -70,22 +75,41 @@
 		$qstr = $qstr . 'orderdetails.quantityOrdered, ';
 	}
 	if($_POST['price'] == TRUE){
-		$qstr = $qstr . 'orderdetails.priceEach ';
+		$qstr = $qstr . 'orderdetails.priceEach, ';
+	}
+
+	//Remove trailing comman & space from above if statements
+	$qstr = rtrim($qstr, ', ');
+
+	
+	//Select the corret table, stop at orders if multiple
+	if($_POST['number'] == TRUE || $_POST['date'] == TRUE){
+		$qstr = $qstr . ' FROM orders';
+	}else if($_POST['name'] == TRUE || $_POST['desc'] == TRUE){
+		$qstr = $qstr . ' FROM products';
+	}else if($_POST['quantity'] == TRUE || $_POST['price'] == TRUE){
+		$qstr = $qstr . ' FROM orderdetails';
 	}
 
 	//Add joins only if columns that require other tables are  checked
-	if($_POST['name'] == TRUE || $_POST['desc'] == TRUE || $_POST['quantity'] == TRUE || $_POST['price'] == TRUE){
+	if($_POST['number'] == TRUE || $_POST['date'] == TRUE){
 
-		$qstr = $qstr . ' FROM orders'
+		if($_POST['name'] == TRUE || $_POST['desc'] == TRUE || $_POST['quantity'] == TRUE || $_POST['price'] == TRUE){
+			if($_POST['name'] == TRUE || $_POST['desc'] == TRUE){
+				$qstr = $qstr . ' INNER JOIN orderdetails ON orders.orderNumber = orderdetails.orderNumber ';
+			}
+			if($_POST['quantity'] == TRUE || $_POST['price'] == TRUE){
+				$qstr = $qstr . ' INNER JOIN products ON orderdetails.productCode = products.productCode ';
+			}
+		}		
 
-		if($_POST['name'] == TRUE || $_POST['desc'] == TRUE){
-			$qstr = $qstr . ' INNER JOIN orderdetails ON orders.orderNumber = orderdetails.orderNumber ';
-		}
-		if($_POST['quantity'] == TRUE || $_POST['price'] == TRUE){
-			$qstr = $qstr . ' INNER JOIN products ON orderdetails.productCode = products.productCode ';
-		}
+	}else{
+
+		//Do something
 
 	}
+
+	
 
 	if($_POST['orderNumber'] != ''){
 		$qstr = $qstr . ' WHERE orders.orderNumber = ' . $_POST['orderNumber'];
