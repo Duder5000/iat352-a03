@@ -73,10 +73,19 @@
 		$qstr = $qstr . 'orderdetails.priceEach ';
 	}
 
-	// Add if statements to remove joins when not needed
-	$qstr = $qstr . ' FROM orders 
-		INNER JOIN orderdetails ON orders.orderNumber = orderdetails.orderNumber 
-		INNER JOIN orderdetails.productCode = products.productCode';
+	//Add joins only if columns that require other tables are  checked
+	if($_POST['name'] == TRUE || $_POST['desc'] == TRUE || $_POST['quantity'] == TRUE || $_POST['price'] == TRUE){
+
+		$qstr = $qstr . ' FROM orders'
+
+		if($_POST['name'] == TRUE || $_POST['desc'] == TRUE){
+			$qstr = $qstr . ' INNER JOIN orderdetails ON orders.orderNumber = orderdetails.orderNumber ';
+		}
+		if($_POST['quantity'] == TRUE || $_POST['price'] == TRUE){
+			$qstr = $qstr . ' INNER JOIN products ON orderdetails.productCode = products.productCode ';
+		}
+
+	}
 
 	if($_POST['orderNumber'] != ''){
 		$qstr = $qstr . ' WHERE orders.orderNumber = ' . $_POST['orderNumber'];
