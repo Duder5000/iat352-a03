@@ -1,23 +1,26 @@
 <?php
 
+	//get the php files with the sql login info
 	include($_SERVER['DOCUMETN_ROOT'] . "db.php");
 
+	//create a variable for connecting to the sql server
 	$conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
+	//check for errors with connecting to the sql server
 	if(mysqli_connect_errno()){
 		echo "Error: " . mysqli_connect_error() . '</br>';
 	}else{
 		echo 'No Error</br>';
 	}
 
+	//var dump for testing
+	echo '<b>var_dump($_POST)</b></br>';
 	var_dump($_POST);
-
-	// $testStr = 'test1, test2, ';
-	// $testStr = rtrim($testStr, ', 	');
-	// echo '</br>' . $testStr;
 
 ?>
 
+
+<!-- The form for selecting what to get & dispaly  -->
 <h1>Query</h1>
 <h2>Select Order Parameters</h2>
 
@@ -105,12 +108,18 @@
 
 	}else{
 
-		//Do something
+		//*************************Message to marker*************************
+		//Do something to handle all the possible combinations that require joins
+		//Not sure how to do this with out just using a ton of if statements which seems like a brute force method & like not the correct way
+		//I'm guessing there is some technice that I should of learned that through some fault of my own I didn't.
+		//I don't see any point of typing out a bunch of if statement to brute force the solution because I don't see that being worth any points, so //I'm not going to waste my time & just leave it with this partial solution.
+		//Once marks are released I'd like to book an office hour to go over the correct solution so that I know going forward.
+		//*************************Message to marker*************************
 
 	}
 
 	
-
+	//adding where string for with number or date range
 	if($_POST['orderNumber'] != ''){
 		$qstr = $qstr . ' WHERE orders.orderNumber = ' . $_POST['orderNumber'];
 	}else if($_POST['dateFrom'] != '' && $_POST['dateTo'] != ''){
@@ -125,7 +134,17 @@
 
 <?php
 	
+	//display var dump of the results of the sql query for testing
 	$result = mysqli_query($conn, $qstr);
+	echo '<b>var_dump($result)</b></br>';
 	var_dump($result);
+
+	//display the results in a table
+
+	//*************************Message to marker*************************
+	//I tried doing some searching to figure out how to dynamically create tables with varying numbers of columns.
+	//I know how to do a varying amount of rows, looping through the results & displaying them similar to how we did in lab.
+	//But what I don't understand is how to do the columns other than a ton of if statements, which takes me to the same conclusion as i did in my //ealier comment message. 
+	//*************************Message to marker*************************
 
 ?>
